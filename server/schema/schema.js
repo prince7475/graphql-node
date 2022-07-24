@@ -76,6 +76,7 @@ const RootQuery = new GraphQLObjectType({
 const mutation = new GraphQLObjectType({
     name: 'Mutation',
     fields: {
+        // Create client
         addClient: {
             type: ClientType,
             args: {
@@ -102,6 +103,26 @@ const mutation = new GraphQLObjectType({
                 return Client.findByIdAndDelete(args.id)
             }
         },
+        // Update client
+        updateClient: {
+            type: ClientType,
+            args: {
+                id: {type: GraphQLNonNull(GraphQLString)},
+                name: {type: GraphQLString},
+                email: {type: GraphQLString},
+                phone: {type: GraphQLString},
+            },
+            resolve(parent,args){
+                return Client.findByIdAndUpdate(args.id,{
+                    $set: {
+                        name: args.name,
+                        email: args.email,
+                        phone: args.phone
+                    }
+                },{new: true})
+            }
+        },
+
         // Add a Project
         addProject: {
             type: ProjectType,
@@ -141,8 +162,34 @@ const mutation = new GraphQLObjectType({
             resolve(parent,args){
                 return Project.findByIdAndRemove(args.id)
             }
+        },
+
+        // Update Project
+        updateProject: {
+            type: ProjectType,
+            args: {
+                id: {type: GraphQLNonNull(GraphQLString)},
+                name: { type: GraphQLString },
+                description: { type: GraphQLString },
+                status: {type:  new GraphQLEnumType({
+                    name: 'ProjectStatusUpdate',
+                    values: {
+                        'new': {value: "Not Started"},
+                        'progress': {value: "In Progress"},
+                        "completed": {value: "Completed"}
+                        
+                    }
+                })
+            }
+        },
+        resolve(parent,args){
+            return Project.findByIdAndUpdate(
+                args.id,
+                {$set: {name: args.name, description: args.description, status: args.status}},
+                {new: true}
+            );
         }
-    
+}
     }
 });
 
