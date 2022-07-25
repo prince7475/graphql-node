@@ -13,6 +13,7 @@
   "dependencies": {
     "colors": "^1.4.0",
     "cors": "^2.8.5",
+    "create-react-app": "^5.0.1",
     "dotenv": "^16.0.1",
     "express": "^4.18.1",
     "express-graphql": "^0.12.0",
